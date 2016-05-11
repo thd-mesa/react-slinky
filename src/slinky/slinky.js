@@ -33,7 +33,7 @@ class Slinky extends React.Component {
     }
     getElementsTop(el) {
         const offsetParent = el.offsetParent;
-        return el.getBoundingClientRect().top - offsetParent.offsetTop;
+        return el.getBoundingClientRect().top - offsetParent.getBoundingClientRect().top;
     }
     setPointerEvents(val) {
         const sections = this.getSections(this.slinkyContainer);
