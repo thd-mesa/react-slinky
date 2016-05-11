@@ -41,12 +41,17 @@ export default function App() {
     );
 
     return (
-        <Slinky
-          sections={slinkySections}
-          headerStyle={headerStyle}
-          sectionStyle={sectionStyle}
-          innerContainerStyle={{ height: '100%' }}
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+            <div>header</div>
+            <Slinky
+              sections={slinkySections}
+              headerStyle={headerStyle}
+              sectionStyle={sectionStyle}
+              innerContainerStyle={{ flex: '1' }}
+              style={{ flex: '1', overflow: 'auto', display: 'flex', width: '100%' }}
+            />
+            <div>Footer</div>
+        </div>
     );
 }
 

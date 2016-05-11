@@ -32,7 +32,8 @@ class Slinky extends React.Component {
         return _.first(section.getElementsByClassName('slinky-header'));
     }
     getElementsTop(el) {
-        return el.getBoundingClientRect().top;
+        const offsetParent = el.offsetParent;
+        return el.getBoundingClientRect().top - offsetParent.offsetTop;
     }
     setPointerEvents(val) {
         const sections = this.getSections(this.slinkyContainer);
@@ -136,14 +137,13 @@ class Slinky extends React.Component {
         }, cb);
     }
     render() {
-        const { sections, headerStyle, sectionStyle, style } = this.props;
+        const { sections, headerStyle, sectionStyle, innerContainerStyle, style } = this.props;
 
         const styles = {
             mainContainer: {
                 position: 'relative'
             },
             innerContainer: {
-                height: '100%',
                 overflow: 'auto'
             }
         };
@@ -171,7 +171,7 @@ class Slinky extends React.Component {
               {...this.props}
               style={{ ...styles.mainContainer, ...style }}
             >
-                <div style={styles.innerContainer}
+                <div style={{ ...styles.innerContainer, ...innerContainerStyle }}
                   onScroll={this.refresh}
                   onWheel={this.handleWheel}
                 >
@@ -186,6 +186,7 @@ Slinky.propTypes = {
     sections: PropTypes.array.isRequired,
     headerStyle: PropTypes.object,
     sectionStyle: PropTypes.object,
+    innerContainerStyle: PropTypes.object,
     style: PropTypes.object
 };
 
