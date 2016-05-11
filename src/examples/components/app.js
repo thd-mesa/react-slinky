@@ -1,17 +1,17 @@
 import React from 'react';
 import _ from 'lodash';
 
-import Slinky from '../../slinky/slinky';
+import Slinky from '../../../lib/slinky/slinky';
 
 export default function App() {
     const headerStyle = {
         width: '100%',
         maxWidth: '400px',
-        color: '#FFF',
+        color: '#212121',
         padding: '.5em 1rem',
         fontSize: '14px',
         fontWeight: 'bold',
-        backgroundColor: '#0FF'
+        backgroundColor: '#ECEEEF'
     };
 
     const sectionStyle = {
@@ -26,7 +26,7 @@ export default function App() {
                 <h4>section {num}</h4>
             ),
             content: (
-                <div>
+                <div style={{ margin: '10px 0' }}>
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit,
                     sed do eiusmod tempor incididunt ut labore et dolore magna
                     aliqua. Ut enim ad minim veniam, quis nostrud exercitation
