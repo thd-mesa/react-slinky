@@ -89,7 +89,7 @@ class Slinky extends React.Component {
                         // Make sure the header doesn't overlap the scrollbar if
                         // the header will be full width
                         const parentWidth = newHeader.parent.getBoundingClientRect().width;
-                        newHeader.header.style.width = parentWidth;
+                        newHeader.header.style.width = `${parentWidth}px`;
                     }
                 }
             } else {
