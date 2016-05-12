@@ -62,6 +62,8 @@ class Slinky extends React.Component {
     }
     refresh() {
         const scrollerHeight = this.slinkyContainer.offsetHeight;
+        const specifiedHeaderWidth = _.get(this, 'props.headerStyle.width');
+        const fullWidthHeader = (!specifiedHeaderWidth || specifiedHeaderWidth === '100%');
 
         const headers = _.map(this.state.headers, (header) => {
             const newHeader = _.cloneDeep(header);
@@ -83,10 +85,19 @@ class Slinky extends React.Component {
                     newHeader.header.style[position] = `${newHeader[position]}px`;
                     newHeader.header.style[position === 'top' ? 'bottom' : 'top'] = '';
                     newHeader.position = position;
+                    if (fullWidthHeader) {
+                        // Make sure the header doesn't overlap the scrollbar if
+                        // the header will be full width
+                        const parentWidth = newHeader.parent.getBoundingClientRect().width;
+                        newHeader.header.style.width = parentWidth;
+                    }
                 }
             } else {
                 newHeader.parent.style.paddingTop = '';
                 newHeader.header.style.position = '';
+                if (fullWidthHeader) {
+                    newHeader.header.style.width = specifiedHeaderWidth;
+                }
                 newHeader.position = '';
             }
 
