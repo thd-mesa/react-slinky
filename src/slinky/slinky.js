@@ -9,6 +9,7 @@ class Slinky extends React.Component {
         this.disablePointerEvents = this.disablePointerEvents.bind(this);
         this.handleWheel = this.handleWheel.bind(this);
         this.handleResize = this.handleResize.bind(this);
+        this.handleHeaderClick = this.handleHeaderClick.bind(this);
         this.refresh = _.throttle(this.refresh.bind(this), 100);
         this.initializeSections = this.initializeSections.bind(this);
 
@@ -59,6 +60,24 @@ class Slinky extends React.Component {
     }
     handleResize() {
         this.initializeSections();
+    }
+    handleHeaderClick(headerIndex) {
+        const stateHeader = this.state.headers[headerIndex];
+
+        let scrollTo = stateHeader.scrollTo;
+
+        const currentScrollTop = this.slinkyScrollingContainer.scrollTop;
+
+        const collapseTolerance = 5;
+
+        if (Math.abs(currentScrollTop - scrollTo) < collapseTolerance) {
+            if (headerIndex < this.state.headers.length) {
+                const nextStateHeader = this.state.headers[headerIndex + 1];
+                scrollTo = nextStateHeader.scrollTo;
+            }
+        }
+
+        this.slinkyScrollingContainer.scrollTop = scrollTo;
     }
     refresh() {
         const scrollerHeight = this.slinkyContainer.offsetHeight;
@@ -128,8 +147,13 @@ class Slinky extends React.Component {
             if (i > 0) {
                 const previousHeader = headers[i - 1];
                 header.top = (previousHeader.top + previousHeader.height);
+                const previousSection = previousHeader.parent;
+                header.scrollTo = (previousHeader.scrollTo +
+                    (previousSection.scrollHeight - previousHeader.height)
+                );
             } else {
                 header.top = 0;
+                header.scrollTo = 0;
             }
         }
 
@@ -146,6 +170,11 @@ class Slinky extends React.Component {
         this.setState({
             headers
         }, cb);
+
+        if (this.props.defaultSectionIndex && headers.length > this.props.defaultSectionIndex) {
+            const header = headers[this.props.defaultSectionIndex];
+            this.slinkyScrollingContainer.scrollTop = header.scrollTo;
+        }
     }
     render() {
         const { sections, headerStyle, sectionStyle, innerContainerStyle, style } = this.props;
@@ -162,11 +191,14 @@ class Slinky extends React.Component {
         const slinkySections = _.map(sections, (section, num) => {
             const { header, content } = section;
 
+            const boundHeaderClick = this.handleHeaderClick.bind(this, num);
+
             return (
                 <section className="slinky-section" style={sectionStyle} key={num}>
                     <header
                       className="slinky-header"
-                      style={{ overflow: 'hidden', ...headerStyle }}
+                      style={{ overflow: 'hidden', cursor: 'pointer', ...headerStyle }}
+                      onClick={boundHeaderClick}
                     >
                         {header}
                     </header>
@@ -182,7 +214,9 @@ class Slinky extends React.Component {
               {...this.props}
               style={{ ...styles.mainContainer, ...style }}
             >
-                <div style={{ ...styles.innerContainer, ...innerContainerStyle }}
+                <div
+                  ref={(ref) => { this.slinkyScrollingContainer = ref; }}
+                  style={{ ...styles.innerContainer, ...innerContainerStyle }}
                   onScroll={this.refresh}
                   onWheel={this.handleWheel}
                 >
@@ -198,7 +232,8 @@ Slinky.propTypes = {
     headerStyle: PropTypes.object,
     sectionStyle: PropTypes.object,
     innerContainerStyle: PropTypes.object,
-    style: PropTypes.object
+    style: PropTypes.object,
+    defaultSectionIndex: PropTypes.number
 };
 
 export default Slinky;

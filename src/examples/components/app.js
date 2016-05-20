@@ -46,6 +46,7 @@ export default function App() {
           headerStyle={headerStyle}
           sectionStyle={sectionStyle}
           innerContainerStyle={{ height: '100%' }}
+          defaultSectionIndex={3}
         />
     );
 }
