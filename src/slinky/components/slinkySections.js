@@ -11,7 +11,7 @@ const SlinkySections = props => {
     return _.map(sections, (section, num) => {
         const { header, content } = section;
 
-        const boundHeaderClick = handleHeaderClick.bind(this, num);
+        const boundHeaderClick = (handleHeaderClick) ? handleHeaderClick.bind(this, num) : () => {};
 
         return (
             <section className="slinky-section" style={sectionStyle} key={num}>
