@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import _ from 'lodash';
 
+import renderSlinkySections from './components/slinkySections';
+
 class Slinky extends React.Component {
     constructor(props) {
         super(props);
@@ -188,25 +190,8 @@ class Slinky extends React.Component {
             }
         };
 
-        const slinkySections = _.map(sections, (section, num) => {
-            const { header, content } = section;
-
-            const boundHeaderClick = this.handleHeaderClick.bind(this, num);
-
-            return (
-                <section className="slinky-section" style={sectionStyle} key={num}>
-                    <header
-                      className="slinky-header"
-                      style={{ overflow: 'hidden', cursor: 'pointer', ...headerStyle }}
-                      onClick={boundHeaderClick}
-                    >
-                        {header}
-                    </header>
-                    {content}
-                </section>
-            );
-        });
-
+        const slinkySections = renderSlinkySections({ sections, sectionStyle, headerStyle, handleHeaderClick: this.handleHeaderClick });
+         
         return (
             <div
               ref={(ref) => { this.slinkyContainer = ref; }}
