@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "node ./tools/build-lib.js",
+    "test": "mocha ./__tests__/slinkySections.js --require babel-core/register --reporter nyan"
     "test-watch": "mocha ./__tests__/slinkySections.js --require babel-core/register --reporter nyan --watch"
   },
   "author": "Stephen Mesa <stephen.mesa@gmail.com>",
