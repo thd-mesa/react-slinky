@@ -1,0 +1,23 @@
+sudo: false
+
+language: node_js
+node_js:
+  - stable
+
+cache:
+  directories:
+    - node_modules
+
+branches:
+  only:
+    - master
+
+install:
+  # install dependencies
+  - npm install
+
+before_script:
+  - npm run build
+
+script: 
+  - npm run test
