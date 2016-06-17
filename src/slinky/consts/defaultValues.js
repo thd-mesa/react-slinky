@@ -1,0 +1,2 @@
+export const SCROLL_EVENT_THROTTLE_MS = 100;
+export const SECTION_COLLAPSE_TOLERANCE = 5;

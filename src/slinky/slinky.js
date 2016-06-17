@@ -2,17 +2,29 @@ import React, { PropTypes } from 'react';
 import _ from 'lodash';
 
 import renderSlinkySections from './components/slinkySections';
+import * as classNames from './consts/classNames';
+import * as defaultValues from './consts/defaultValues';
+
+const defaultStyles = {
+    mainContainer: {
+        position: 'relative'
+    },
+    innerContainer: {
+        overflow: 'auto'
+    }
+};
 
 class Slinky extends React.Component {
     constructor(props) {
         super(props);
+
         this.setPointerEvents = this.setPointerEvents.bind(this);
         this.enablePointerEvents = this.enablePointerEvents.bind(this);
         this.disablePointerEvents = this.disablePointerEvents.bind(this);
         this.handleWheel = this.handleWheel.bind(this);
         this.handleResize = this.handleResize.bind(this);
         this.handleHeaderClick = this.handleHeaderClick.bind(this);
-        this.refresh = _.throttle(this.refresh.bind(this), 100);
+        this.refresh = _.throttle(this.refresh.bind(this), props.scrollEventThrottleMS);
         this.initializeSections = this.initializeSections.bind(this);
 
         this.state = {
@@ -29,10 +41,10 @@ class Slinky extends React.Component {
         window.removeEventListener('resize', this.handleResize);
     }
     getSections(container) {
-        return container.getElementsByClassName('slinky-section');
+        return container.getElementsByClassName(classNames.SLINKY_SECTION);
     }
     getSectionHeader(section) {
-        return _.first(section.getElementsByClassName('slinky-header'));
+        return _.first(section.getElementsByClassName(classNames.SLINKY_HEADER));
     }
     getElementsTop(el) {
         const offsetParent = el.offsetParent;
@@ -70,9 +82,9 @@ class Slinky extends React.Component {
 
         const currentScrollTop = this.slinkyScrollingContainer.scrollTop;
 
-        const collapseTolerance = 5;
+        const { sectionCollapseTolerance } = this.props;
 
-        if (Math.abs(currentScrollTop - scrollTo) < collapseTolerance) {
+        if (Math.abs(currentScrollTop - scrollTo) < sectionCollapseTolerance) {
             if (headerIndex < this.state.headers.length) {
                 const nextStateHeader = this.state.headers[headerIndex + 1];
                 scrollTo = nextStateHeader.scrollTo;
@@ -179,29 +191,31 @@ class Slinky extends React.Component {
         }
     }
     render() {
-        const { sections, headerStyle, sectionStyle, innerContainerStyle, style } = this.props;
+        const {
+            sections,
+            headerStyle,
+            sectionStyle,
+            innerContainerStyle,
+            style
+        } = this.props;
 
-        const styles = {
-            mainContainer: {
-                position: 'relative'
-            },
-            innerContainer: {
-                overflow: 'auto'
-            }
-        };
+        const slinkySections = renderSlinkySections({
+            sections,
+            sectionStyle,
+            headerStyle,
+            handleHeaderClick: this.handleHeaderClick
+        });
 
-        const slinkySections = renderSlinkySections({ sections, sectionStyle, headerStyle, handleHeaderClick: this.handleHeaderClick });
-         
         return (
             <div
               ref={(ref) => { this.slinkyContainer = ref; }}
-              className="slinky-container"
+              className={classNames.SLINKY_CONTAINER}
               {...this.props}
-              style={{ ...styles.mainContainer, ...style }}
+              style={{ ...defaultStyles.mainContainer, ...style }}
             >
                 <div
                   ref={(ref) => { this.slinkyScrollingContainer = ref; }}
-                  style={{ ...styles.innerContainer, ...innerContainerStyle }}
+                  style={{ ...defaultStyles.innerContainer, ...innerContainerStyle }}
                   onScroll={this.refresh}
                   onWheel={this.handleWheel}
                 >
@@ -218,7 +232,14 @@ Slinky.propTypes = {
     sectionStyle: PropTypes.object,
     innerContainerStyle: PropTypes.object,
     style: PropTypes.object,
-    defaultSectionIndex: PropTypes.number
+    defaultSectionIndex: PropTypes.number,
+    scrollEventThrottleMS: PropTypes.number,
+    sectionCollapseTolerance: PropTypes.number
+};
+
+Slinky.defaultProps = {
+    scrollEventThrottleMS: defaultValues.SCROLL_EVENT_THROTTLE_MS,
+    sectionCollapseTolerance: defaultValues.SECTION_COLLAPSE_TOLERANCE
 };
 
 export default Slinky;

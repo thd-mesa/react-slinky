@@ -47,6 +47,8 @@ export default function App() {
           sectionStyle={sectionStyle}
           innerContainerStyle={{ height: '100%' }}
           defaultSectionIndex={3}
+          scrollEventThrottleMS={100}
+          sectionCollapseTolerance={20}
         />
     );
 }
