@@ -47,6 +47,7 @@ export default function App() {
           sectionStyle={sectionStyle}
           innerContainerStyle={{ height: '100%' }}
           defaultSectionIndex={3}
+          className="example-slinky"
         />
     );
 }

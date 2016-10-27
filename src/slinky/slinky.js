@@ -179,7 +179,14 @@ class Slinky extends React.Component {
         }
     }
     render() {
-        const { sections, headerStyle, sectionStyle, innerContainerStyle, style } = this.props;
+        const {
+            sections,
+            headerStyle,
+            sectionStyle,
+            innerContainerStyle,
+            style,
+            className
+        } = this.props;
 
         const styles = {
             mainContainer: {
@@ -190,13 +197,22 @@ class Slinky extends React.Component {
             }
         };
 
-        const slinkySections = renderSlinkySections({ sections, sectionStyle, headerStyle, handleHeaderClick: this.handleHeaderClick });
-         
+        let slinkyContainerClassName = 'slinky-container';
+        if (className) {
+            slinkyContainerClassName += ` ${className}`;
+        }
+
+        const slinkySections = renderSlinkySections({
+            sections,
+            sectionStyle,
+            headerStyle,
+            handleHeaderClick: this.handleHeaderClick
+        });
+
         return (
             <div
               ref={(ref) => { this.slinkyContainer = ref; }}
-              className="slinky-container"
-              {...this.props}
+              className={slinkyContainerClassName}
               style={{ ...styles.mainContainer, ...style }}
             >
                 <div
@@ -218,7 +234,8 @@ Slinky.propTypes = {
     sectionStyle: PropTypes.object,
     innerContainerStyle: PropTypes.object,
     style: PropTypes.object,
-    defaultSectionIndex: PropTypes.number
+    defaultSectionIndex: PropTypes.number,
+    className: PropTypes.string,
 };
 
 export default Slinky;
